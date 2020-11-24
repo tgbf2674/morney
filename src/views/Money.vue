@@ -1,5 +1,5 @@
 <template>
-    <layout class-prefix="layout">{{record}}
+    <layout class-prefix="layout">{{recordList}}
         <NumberPad @submit="saveRecord" :value.sync="record.amount"/>
         <Types :value.sync="record.type"/>
         <Notes @update:value="onUpdateNotes"/>
@@ -16,19 +16,22 @@
     import Vue from 'vue';
     import {Component, Watch} from 'vue-property-decorator';
 
+
+
     type Record = {
         tags: string[];
         notes: string;
         type: string;
         amount: number;
+        createAt: Date | undefined;
     }
     @Component({
         components: {Tags, Notes, Types, NumberPad},
     })
     export default class Money extends Vue {
         tags = ['衣', '食', '住', '行'];
-        recordList: Record[] = [];
-        record: Record = {tags: [], notes: '', type: '', amount: 0};
+        recordList: Record[] = JSON.parse(window.localStorage.getItem('recordList') || '[]');
+        record: Record = {tags: [], notes: '', type: '', amount: 0,createAt: new Date()};
 
         onUpdateTags(value: string[]) {
             this.record.tags = value;
@@ -39,7 +42,8 @@
         }
 
         saveRecord() {
-            const record2= JSON.parse(JSON.stringify(this.record));
+            const record2: Record = JSON.parse(JSON.stringify(this.record));
+            record2.createAt = new Date();
             this.recordList.push(record2);
             console.log(this.recordList);
         }
