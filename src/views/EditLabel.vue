@@ -40,7 +40,7 @@
         }
         remove(){
             if(this.tag){
-                if(store.removeTag(this.tag.id)){
+                if(store.removeTag({id: this.tag.id})){
                  this.$router.back();
                 }else {
                     window.alert('删除失败')
