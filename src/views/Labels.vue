@@ -1,7 +1,8 @@
 <template>
     <layout>
         <div class="tags">
-            <router-link class="tag" v-for="tag in tags" :key="tag.id" :to="`/labels/edit/${tag.id}`"><span>{{tag.name}}</span>
+            <router-link class="tag" v-for="tag in tags" :key="tag.id" :to="`/labels/edit/${tag.id}`">
+                <span>{{tag.name}}</span>
                 <Icon name="right"/>
             </router-link>
         </div>
@@ -14,15 +15,22 @@
 <script lang="ts">
     import Vue from 'vue';
     import {Component} from 'vue-property-decorator';
-    @Component
-    export default class Labels extends Vue{
-        // tags = store.tagList;
-        tags = [];
-        createTag(){
-            const name = window.prompt('请输入标签名');
-            if(name) {
-               // store.createTag(name);
-            }
+    import {TagHelper} from '@/mixins/TagHelper';
+    import {mixins} from 'vue-class-component';
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const tagHelper = require('@/mixins/TagHelper');
+
+    @Component({
+        mixins: [tagHelper],
+        computed: {
+            tags() {
+                return this.$store.state.tagList;
+            },
+        }
+    })
+    export default class Labels extends mixins(TagHelper) {
+        beforeCreate(){
+            this.$store.commit('fetchTags')
         }
     }
 </script>
@@ -47,14 +55,16 @@
             }
         }
     }
-    .createTag{
+
+    .createTag {
         background: #1296db;
         color: white;
         border-radius: 4px;
         border: none;
         height: 40px;
         padding: 0 16px;
-        &-wrapper{
+
+        &-wrapper {
             text-align: center;
             padding: 16px;
             margin-top: 28px;

@@ -8,7 +8,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     recordList: [] as RecordItem[],
-    tagList: []as Tag[],
+    tagList: [] as Tag[],
   },
   mutations:{
     fetchRecords(state){
@@ -39,8 +39,7 @@ const store = new Vuex.Store({
       return 'success';
     },
     saveTags(){
-      window.localStorage.setItem('tagList', JSON.stringify(this.tagList));
-    }
+      window.localStorage.setItem('tagList', JSON.stringify(store.state.tagList));}
   }
 });
 
