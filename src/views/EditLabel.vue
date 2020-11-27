@@ -24,34 +24,35 @@
 
     })
     export default class EditLabel extends Vue {
-        get tag(){
-            return this.$store.state.currentTag
+        get tag() {
+            return this.$store.state.currentTag;
         }
 
         created() {
             const id = this.$route.params.id;
-            this.$store.commit('setCurrentTag',id);
+            this.$store.commit('fetchTags');
+            this.$store.commit('setCurrentTag', id);
             console.log(this.tag);
-            if(!this.tag){
-                this.$router.replace('/404')
+            if (!this.tag) {
+                this.$router.replace('/404');
             }
         }
-        updateTag(){
-            if(this.tag) {
-                // store.updateTag(this.tag.id, name)
+
+        updateTag(name: string) {
+            if (this.tag) {
+                this.$store.commit('updateTag', {
+                    id: this.tag.id, name
+                });
             }
         }
-        remove(){
-            if(this.tag){
-                return
-                // if(store.removeTag({id: this.tag.id})){
-                //  this.$router.back();
-                // }else {
-                //     window.alert('删除失败')
-                // }
+
+        remove() {
+            if (this.tag) {
+                this.$store.commit('removeTag',this.tag.id)
             }
         }
-        goBack(){
+
+        goBack() {
             this.$router.back();
         }
     }
