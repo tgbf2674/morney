@@ -11,6 +11,7 @@ const store = new Vuex.Store({
     state: {
         recordList: [] as RecordItem[],
         createRecordError: null,
+        createTagError: null,
         tagList: [] as Tag[],
         currentTag: undefined
     } as RootState,
@@ -18,8 +19,8 @@ const store = new Vuex.Store({
         setCurrentTag(state, id: string) {
             state.currentTag = state.tagList.filter(t => t.id === id)[0];
         },
-        updateTag(state, object: { id: string; name: string }) {
-            const {id, name} = object;
+        updateTag(state, payload: { id: string; name: string }) {
+            const {id, name} = payload;
             const idList = state.tagList.map(item => item.id);
             if (idList.indexOf(id) >= 0) {
                 const names = state.tagList.map(item => item.name);
@@ -72,9 +73,10 @@ const store = new Vuex.Store({
             }
         },
         createTag(state, name: string) {
+            state.createTagError = null;
             const names = state.tagList.map(item => item.name);
             if (names.indexOf(name) >= 0) {
-                window.alert('标签名重复了');
+                state.createTagError= new Error('tag name duplicated')
             }
             const id = createId().toString();
             state.tagList.push({id, name: name});
