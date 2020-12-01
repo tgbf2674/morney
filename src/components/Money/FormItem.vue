@@ -1,5 +1,5 @@
 <template>
-    <div>{{value}}
+    <div>
         <label class="formItem">
             <span class="name">{{this.fieldName}}</span>
             <input :value="value" @input="onValueChanged($event.target.value)" type="text" :placeholder="placeholder">

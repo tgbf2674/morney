@@ -1,7 +1,7 @@
 <template>
     <layout>
         <Tabs class-prefix="type" :data-source="recordTypeList" :value.sync="type"/>
-            <ol>
+            <ol v-if="groupedList.length>0">
                 <li v-for="(group,index) in groupedList" :key="index">
                     <h3 class="title">{{beautify(group.title)}} <span>￥{{group.total}}</span></h3>
                     <ol>
@@ -13,6 +13,9 @@
                     </ol>
                 </li>
             </ol>
+        <div v-else class="noResult">
+            目前没有相关记录
+        </div>
     </layout>
 </template>
 <style lang="scss" scoped>
@@ -41,7 +44,6 @@
     import Vue from 'vue';
     import {Component} from 'vue-property-decorator';
     import Tabs from '@/components/Tabs.vue';
-    import intervalList from '@/constant/intervalList';
     import recordTypeList from '@/constant/recordTypeList';
     import dayjs from 'dayjs';
     import clone from '@/lib/clone';
@@ -51,7 +53,7 @@
     })
     export default class Statistics extends Vue {
         tagString(tags: Tag[]){
-            return tags.length ===0? '无' : tags.join(',')
+            return tags.length ===0? '无' : tags.map(t=>t.name).join('，')
         }
         beautify(string: string){
             const now = new Date();
@@ -74,8 +76,8 @@
 
         get groupedList() {
             const {recordList} = this;
-            if(recordList.length===0){return []}
             const newList = clone(recordList).filter(r=>r.type===this.type).sort((a,b)=>dayjs(b.createAt).valueOf() - dayjs(a.createAt).valueOf());
+            if(newList.length===0){return []}
             type Result = {title: string ; total?: number;items: RecordItem[]}[]
             const result: Result = [{title: dayjs(newList[0].createAt).format('YYYY-MM-DD'),items: [newList[0]]}];
             for (let i=0;i<newList.length;i++){
@@ -103,6 +105,10 @@
 </script>
 
 <style lang="scss" scoped>
+    .noResult{
+        padding: 16px;
+        text-align: center;
+    }
     ::v-deep {
         .type-tabs-item {
             background: white;

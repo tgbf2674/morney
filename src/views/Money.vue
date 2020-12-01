@@ -1,11 +1,11 @@
 <template>
     <layout class-prefix="layout">
         <NumberPad @submit="saveRecord" :value.sync="record.amount"/>
-        <Tabs :data-source="recordTypeList" :value.sync="record.type" />
+        <Tabs :data-source="recordTypeList" :value.sync="record.type"/>
         <div class="notes">
-            <FormItem field-name="备注" @update:value="onUpdateNotes" placeholder="在这里输入备注"/>
+            <FormItem field-name="备注" :value.sync="record.notes" placeholder="在这里输入备注"/>
         </div>
-        <Tags />
+        <Tags @update:value="record.tags = $event"/>
     </layout>
 </template>
 
@@ -25,19 +25,30 @@
 
     })
     export default class Money extends Vue {
-        get recordList(){ return this.$store.state.recordList;}
+        get recordList() { return this.$store.state.recordList;}
 
-        recordTypeList= recordTypeList;
+        recordTypeList = recordTypeList;
 
-        record: RecordItem = {tags: [], notes: '', type: '', amount: 0,createAt: new Date()};
+        record: RecordItem = {tags: [], notes: '', type: '', amount: 0};
+
         onUpdateNotes(value: string) {
             this.record.notes = value;
         }
-        created(){
-            this.$store.commit('fetchRecords')
+
+        created() {
+            this.$store.commit('fetchRecords');
         }
+
         saveRecord() {
-            this.$store.commit('createRecord',this.record)
+            if (!this.record.tags || this.record.tags.length === 0) {
+                return window.alert('请至少选择一个标签');
+
+            }
+            this.$store.commit('createRecord', this.record);
+            if (this.$store.state.createRecordError === null) {
+                window.alert('已保存');
+                this.record.notes= '';
+            }
         }
     }
 </script>
@@ -47,7 +58,8 @@
         flex-direction: column-reverse;
 
     }
-    .notes{
+
+    .notes {
         padding: 12px 0;
     }
 </style>
