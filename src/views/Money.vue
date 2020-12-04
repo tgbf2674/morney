@@ -45,7 +45,9 @@
         saveRecord() {
             if (!this.record.tags || this.record.tags.length === 0) {
                 return window.alert('请至少选择一个标签');
-
+            }
+            if(!this.record.type || this.record.type.length===0){
+                return window.alert('请至少选择一个记账类型收入或支出')
             }
             this.$store.commit('createRecord', this.record);
             if (this.$store.state.createRecordError === null) {
