@@ -1,6 +1,7 @@
 <template>
     <Layout>
         <Tabs class-prefix="type" :data-source="recordTypeList" :value.sync="type"/>
+        <Chart :options="x"/>
         <ol v-if="groupedList.length>0">
             <li v-for="(group, index) in groupedList" :key="index">
                 <h3 class="title">{{beautify(group.title)}} <span>￥{{group.total}}</span></h3>
@@ -52,9 +53,10 @@
     import recordTypeList from '@/constant/recordTypeList';
     import dayjs from 'dayjs';
     import clone from '@/lib/clone';
+    import Chart from '@/components/Chart.vue';
 
     @Component({
-        components: {Tabs},
+        components: {Tabs,Chart},
     })
     export default class Statistics extends Vue {
         tagString(tags: Tag[]) {
@@ -75,6 +77,38 @@
                 return dayjs().format('YYYY年M月D日');
             }
         }
+
+        get x() {
+            return {
+                xAxis: {
+                    type: 'category',
+                    data: [
+                        'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun',
+                        'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun',
+                        'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun',
+                        'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun',
+                    ]
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    data: [
+                        120, 200, 150, 80, 70, 110, 130,
+                        120, 200, 150, 80, 70, 110, 130,
+                        120, 200, 150, 80, 70, 110, 130,
+                        120, 200, 150, 80, 70, 110, 130,
+                    ],
+                    type: 'line',
+                    showBackground: true,
+                    backgroundStyle: {
+                        color: 'rgba(220, 220, 220, 0.8)'
+                    }
+                }],
+                tooltip: {show: true}
+            }
+        }
+
 
         get recordList() {
             return (this.$store.state as RootState).recordList;
@@ -99,8 +133,6 @@
             }
             result.map(group => {
                 group.total = group.items.reduce((sum, item) => {
-                    console.log(sum);
-                    console.log(item);
                     return sum + item.amount;
                 }, 0);
             });
@@ -117,6 +149,10 @@
 </script>
 
 <style lang="scss" scoped>
+    .echarts{
+        max-width: 100%;
+        height: 400px;
+    }
     .noResult {
         padding: 16px;
         text-align: center;
