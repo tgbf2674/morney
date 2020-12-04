@@ -2,6 +2,9 @@
     <layout class-prefix="layout">
         <NumberPad @submit="saveRecord" :value.sync="record.amount"/>
         <Tabs :data-source="recordTypeList" :value.sync="record.type"/>
+        <div class="createAt">
+            <FormItem type="date" field-name="日期" :value.sync="record.createAt" placeholder="在这里输入日期"/>
+        </div>
         <div class="notes">
             <FormItem field-name="备注" :value.sync="record.notes" placeholder="在这里输入备注"/>
         </div>
@@ -29,7 +32,7 @@
 
         recordTypeList = recordTypeList;
 
-        record: RecordItem = {tags: [], notes: '', type: '', amount: 0};
+        record: RecordItem = {tags: [], notes: '', type: '', amount: 0, createAt: new Date().toISOString()};
 
         onUpdateNotes(value: string) {
             this.record.notes = value;
