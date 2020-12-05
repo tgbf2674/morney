@@ -1,8 +1,8 @@
 <template>
     <Layout>
         <Tabs class-prefix="type" :data-source="recordTypeList" :value.sync="type"/>
-        <div class="chart-wrapper">
-            <Chart class="chart" ref="chartWrapper" :options="chartOptions"/>
+        <div class="chart-wrapper" ref="chartWrapper">
+            <Chart class="chart" :options="chartOptions"/>
         </div>
         <ol v-if="groupedList.length>0">
             <li v-for="(group, index) in groupedList" :key="index">
@@ -104,8 +104,8 @@
             const array = [];
             for (let i = 0; i <= 29; i++) {
                 const dateString = day(today).subtract(i, 'day').format('YYYY-MM-DD');
-                const found = _.find(this.recordList, {createAt: dateString});
-                array.push({key: dateString, value: found? found.amount : 0});
+                const found = _.find(this.groupedList, {title: dateString});
+                array.push({key: dateString, value: found? found.total : 0});
             }
             array.sort((a,b)=>{
                 if (a.key>b.key){
@@ -164,7 +164,7 @@
                 }],
                 tooltip: {
                     show: true, triggerOn: 'click',
-                    formatter: 'c', position: 'top'
+                    formatter: '{c}' , position: 'top'
                 }
             };
         }
