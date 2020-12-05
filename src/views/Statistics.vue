@@ -53,7 +53,8 @@
 
         &-wrapper {
             overflow: auto;
-            &::-webkit-scrollbar{
+
+            &::-webkit-scrollbar {
                 display: none;
             }
         }
@@ -67,6 +68,8 @@
     import dayjs from 'dayjs';
     import clone from '@/lib/clone';
     import Chart from '@/components/Chart.vue';
+    import _ from 'lodash';
+    import day from 'dayjs';
 
     @Component({
         components: {Tabs, Chart},
@@ -77,7 +80,8 @@
         }
 
         mounted() {
-            (this.$refs.chartWrapper as HTMLDivElement).scrollLeft = 9999;
+            const div = (this.$refs.chartWrapper as HTMLDivElement);
+            div.scrollLeft = div.scrollWidth;
         }
 
         beautify(string: string) {
@@ -95,7 +99,29 @@
             }
         }
 
+        get y(){
+            const today = new Date();
+            const array = [];
+            for (let i = 0; i <= 29; i++) {
+                const dateString = day(today).subtract(i, 'day').format('YYYY-MM-DD');
+                const found = _.find(this.recordList, {createAt: dateString});
+                array.push({date: dateString, value: found? found.amount : 0});
+            }
+            array.sort((a,b)=>{
+                if (a.date>b.date){
+                    return 1
+                }else if (a.date===b.date){
+                    return 0
+                }else{
+                    return -1
+                }
+            });
+            return array;
+        }
+
         get x() {
+            const keys = this.y.map(item => item.date);
+            const values = this.y.map(item => item.value);
             return {
                 grid: {
                     right: 0,
@@ -103,17 +129,12 @@
                 },
                 xAxis: {
                     type: 'category',
-                    data: [
-                        'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun',
-                        'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun',
-                        'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun',
-                        'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun',
-                    ],
-                    axisTick:{
-                        alignWithLabel:true
+                    data: keys,
+                    axisTick: {
+                        alignWithLabel: true
                     },
-                    axisLine:{
-                        lineStyle:{
+                    axisLine: {
+                        lineStyle: {
                             color: '#1296db'
                         }
                     }
@@ -124,25 +145,21 @@
                 },
 
                 series: [{
-                    symbol:'circle',
+                    symbol: 'circle',
                     symbolSize: 13,
-                    itemStyle:{
+                    itemStyle: {
                         color: '#1296db'
                     },
-                    data: [
-                        120, 200, 150, 80, 70, 110, 130,
-                        120, 200, 150, 80, 70, 110, 130,
-                        120, 200, 150, 80, 70, 110, 130,
-                        120, 200, 150, 80, 70, 110, 130,
-                    ],
+                    data: values,
                     type: 'line',
                     showBackground: true,
                     backgroundStyle: {
                         color: 'rgba(220, 220, 220, 0.8)'
                     }
                 }],
-                tooltip: {show: true,triggerOn: 'click',
-                formatter: 'c', position: 'top'
+                tooltip: {
+                    show: true, triggerOn: 'click',
+                    formatter: 'c', position: 'top'
                 }
             };
         }
