@@ -1,7 +1,9 @@
 <template>
     <Layout>
         <Tabs class-prefix="type" :data-source="recordTypeList" :value.sync="type"/>
-        <Chart :options="x"/>
+        <div class="chart-wrapper">
+            <Chart class="chart" ref="chartWrapper" :options="x"/>
+        </div>
         <ol v-if="groupedList.length>0">
             <li v-for="(group, index) in groupedList" :key="index">
                 <h3 class="title">{{beautify(group.title)}} <span>￥{{group.total}}</span></h3>
@@ -45,6 +47,17 @@
         margin-left: 16px;
         color: #999999;
     }
+
+    .chart {
+        width: 430%;
+
+        &-wrapper {
+            overflow: auto;
+            &::-webkit-scrollbar{
+                display: none;
+            }
+        }
+    }
 </style>
 <script lang="ts">
     import Vue from 'vue';
@@ -56,11 +69,15 @@
     import Chart from '@/components/Chart.vue';
 
     @Component({
-        components: {Tabs,Chart},
+        components: {Tabs, Chart},
     })
     export default class Statistics extends Vue {
         tagString(tags: Tag[]) {
             return tags.length === 0 ? '无' : tags.map(t => t.name).join('，');
+        }
+
+        mounted() {
+            (this.$refs.chartWrapper as HTMLDivElement).scrollLeft = 9999;
         }
 
         beautify(string: string) {
@@ -80,6 +97,10 @@
 
         get x() {
             return {
+                grid: {
+                    right: 0,
+                    left: 0,
+                },
                 xAxis: {
                     type: 'category',
                     data: [
@@ -87,12 +108,27 @@
                         'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun',
                         'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun',
                         'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun',
-                    ]
+                    ],
+                    axisTick:{
+                        alignWithLabel:true
+                    },
+                    axisLine:{
+                        lineStyle:{
+                            color: '#1296db'
+                        }
+                    }
                 },
                 yAxis: {
-                    type: 'value'
+                    type: 'value',
+                    show: false
                 },
+
                 series: [{
+                    symbol:'circle',
+                    symbolSize: 13,
+                    itemStyle:{
+                        color: '#1296db'
+                    },
                     data: [
                         120, 200, 150, 80, 70, 110, 130,
                         120, 200, 150, 80, 70, 110, 130,
@@ -105,8 +141,10 @@
                         color: 'rgba(220, 220, 220, 0.8)'
                     }
                 }],
-                tooltip: {show: true}
-            }
+                tooltip: {show: true,triggerOn: 'click',
+                formatter: 'c', position: 'top'
+                }
+            };
         }
 
 
@@ -149,10 +187,11 @@
 </script>
 
 <style lang="scss" scoped>
-    .echarts{
+    .echarts {
         max-width: 100%;
         height: 400px;
     }
+
     .noResult {
         padding: 16px;
         text-align: center;
