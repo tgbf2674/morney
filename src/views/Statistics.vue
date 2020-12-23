@@ -85,17 +85,19 @@
         }
 
         beautify(string: string) {
-            const now = new Date();
-            if (dayjs(string).isSame(now, 'day')) {
+            const day = dayjs(string);
+            const now = dayjs();
+            if (day.isSame(now, 'day')) {
                 return '今天';
-            } else if (dayjs(string).isSame(now.valueOf() - 86400 * 1000, 'day')) {
+            } else if (day.isSame(now.subtract(1, 'day'), 'day')) {
+                console.log('hi');
                 return '昨天';
-            } else if (dayjs(string).isSame(dayjs().subtract(2, 'day'), 'day')) {
+            } else if (day.isSame(now.subtract(2, 'day'), 'day')) {
                 return '前天';
-            } else if (dayjs().isSame(dayjs(), 'year')) {
-                return dayjs().format('M月D日');
+            } else if (day.isSame(now, 'year')) {
+                return day.format('M月D日');
             } else {
-                return dayjs().format('YYYY年M月D日');
+                return day.format('YYYY年M月D日');
             }
         }
 
