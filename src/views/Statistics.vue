@@ -222,8 +222,6 @@
     }
 
     ::v-deep {
-        .type-tabs-item {
-            background: white;
 
             &.selected {
                 background: #1296db;
@@ -232,7 +230,6 @@
                     display: none;
                 }
             }
-        }
 
         .interval-tabs-item {
             height: 48px;
