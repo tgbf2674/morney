@@ -98,16 +98,13 @@ export default class Tags extends mixins(TagHelper) {
   flex-grow: 1;
   display: flex;
   flex-direction: column-reverse;
-
   > .current {
     display: flex;
     flex-wrap: wrap;
     padding-top: 4px;
     overflow-x: auto;
     list-style: none;
-    margin-left: -6px;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
-
     > li {
       align-items: center;
       display: flex;

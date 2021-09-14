@@ -86,14 +86,12 @@
 
         .button {
             @extend %clearFix;
-
             > button {
                 width: 25%;
                 height: 64px;
                 float: left;
                 background: transparent;
                 border: none;
-
                 &.ok {
                     height: 64*2px;
                     float: right;
@@ -106,7 +104,7 @@
                 $bg: #f2f2f2;
 
                 &:nth-child(1) {
-                    background: $bg;
+                  background: $bg;
                 }
 
                 &:nth-child(2), &:nth-child(5), {
