@@ -14,7 +14,7 @@
       <li>
         <div>
           <router-link to="/labels">
-            <Icon name="编辑"/>
+            <Icon name="edit"/>
           </router-link>
         </div>
         编辑标签
@@ -30,7 +30,7 @@
       <li>
         <div>
           <router-link to="/labels">
-            <Icon name="编辑"/>
+            <Icon name="edit"/>
           </router-link>
         </div>
         编辑标签
@@ -70,12 +70,11 @@ export default class Tags extends mixins(TagHelper) {
   }
 
   toggle(tag: string) {
-    const index = this.selectedTags.indexOf(tag);
-    if (index >= 0) {
-      this.selectedTags.splice(index, 1);
-    } else {
-      this.selectedTags.push(tag);
+    const length = this.selectedTags.length
+    if(length>0){
+      this.selectedTags.pop()
     }
+    this.selectedTags.push(tag)
     this.$emit('update:value', this.selectedTags);
   }
 }
@@ -103,7 +102,7 @@ export default class Tags extends mixins(TagHelper) {
   > .current {
     display: flex;
     flex-wrap: wrap;
-    flex-flow: row nowrap;
+    padding-top: 4px;
     overflow-x: auto;
     list-style: none;
     margin-left: -6px;
@@ -120,8 +119,8 @@ export default class Tags extends mixins(TagHelper) {
       color: gray;
       font-size: 12px;
       svg{
-        width: 28px;
-        height: 28px;
+        width: 27px;
+        height: 23px;
         fill: #c4c4c4;
         display: block;
         margin-bottom: 3px;
