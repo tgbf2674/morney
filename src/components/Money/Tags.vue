@@ -65,7 +65,7 @@ export default class Tags extends mixins(TagHelper) {
   created() {
     this.$store.commit('fetchTags');
     if(this.selectedTag){
-      this.toggle(this.selectedTag)
+      this.toggle(this.selectedTag.name)
     }
   }
 
