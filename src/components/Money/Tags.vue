@@ -17,7 +17,7 @@
             <Icon name="edit"/>
           </router-link>
         </div>
-        编辑标签
+        编辑
       </li>
     </ul>
     <ul class="current" v-else>
@@ -33,7 +33,7 @@
             <Icon name="edit"/>
           </router-link>
         </div>
-        编辑标签
+        编辑
       </li>
     </ul>
   </div>
