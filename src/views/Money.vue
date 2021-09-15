@@ -1,11 +1,10 @@
 <template>
   <layout class-prefix="layout">
     <NumberPad @submit="saveRecord" :value.sync="record.amount"/>
-    <div class="createAt">
-      <FormItem type="date" field-name="日期" :value.sync="record.createAt" placeholder="在这里输入日期"/>
-    </div>
     <div class="notes">
-      <FormItem field-name="备注" :value.sync="record.notes" placeholder="在这里输入备注"/>
+      <FormItem field-name="备注" :value.sync="record.notes" placeholder="在这里输入备注">
+        <DatePick @timeupdate="onUpdateTime"></DatePick>
+      </FormItem>
     </div>
     <Tags @update:value="record.tags = $event"/>
     <Tabs :data-source="recordTypeList" :value.sync="record.type"/>
@@ -19,12 +18,13 @@ import Tags from '@/components/Money/Tags.vue';
 import Vue from 'vue';
 import {Component,} from 'vue-property-decorator';
 import Tabs from '@/components/Tabs.vue';
+import DatePick from '@/components/datePick.vue';
 import recordTypeList from '@/constant/recordTypeList';
 
 // eslint-disable-next-line no-undef
 
 @Component({
-  components: {Tabs, FormItem, Tags, NumberPad},
+  components: {Tabs, FormItem, Tags, NumberPad,DatePick},
 
 })
 export default class Money extends Vue {
@@ -37,7 +37,9 @@ export default class Money extends Vue {
   onUpdateNotes(value: string) {
     this.record.notes = value;
   }
-
+  onUpdateTime(value: string){
+    this.record.createAt = value
+  }
   created() {
     this.$store.commit('fetchRecords');
   }
