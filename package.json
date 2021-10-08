@@ -46,6 +46,7 @@
     "svg-sprite-loader": "^5.0.0",
     "svgo-loader": "^2.2.1",
     "typescript": "~3.9.3",
+    "uglifyjs-webpack-plugin": "^2.2.0",
     "vue-template-compiler": "^2.6.11"
   },
   "gitHooks": {

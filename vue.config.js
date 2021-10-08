@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 /* eslint-disable */
 const path = require('path');
-
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 module.exports = {
     publicPath: process.env.NODE_ENV === 'production'
     ? '/morney-website/'
@@ -19,7 +19,7 @@ module.exports = {
         config.plugin('svg-sprite').use(require('svg-sprite-loader/plugin'), [{plainSprite: true}]);
       config.module.rule('svg').exclude.add(dir)
     },
-    configureWebpack: {
+    configureWebpack:{
         externals: {
             'vue': 'Vue',
             'vue-router': 'VueRouter',
@@ -27,5 +27,15 @@ module.exports = {
             'echarts': 'echarts',
             'lodash': '_'
         },
-    }
+      plugins: [new UglifyJsPlugin({
+          uglifyOptions: {
+              compress:{
+                  drop_debugger: true,
+                  drop_console: true
+              }
+          },
+          sourceMap: false,
+          parallel: true
+      })]
+    },
 };
